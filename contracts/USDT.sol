@@ -7,4 +7,8 @@ contract USDT is ERC20 {
     constructor() ERC20("USDT", "USDT") {
         _mint(msg.sender, 100000 * 10 ** decimals());
     }
+
+    function decimals() public pure override returns (uint8) {
+        return 6;
+    }
 }
