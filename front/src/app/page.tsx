@@ -15,14 +15,8 @@ const pixelify = Pixelify_Sans({
 const HARDHAT_NETWORK_ID = "0x539";
 const DISPENSER_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
-interface EthereumWindow extends Window {
-  ethereum: {
-    request: (args: { method: string; params?: any[] }) => Promise<any>;
-    on: (event: string, callback: Function) => void;
-  };
-}
-
-declare let window: EthereumWindow;
+// @ts-ignore
+declare let window: any;
 
 type CurrentConnectionProps = {
   provider: BrowserProvider | undefined;
