@@ -15,7 +15,7 @@ const pixelify = Pixelify_Sans({
 const HARDHAT_NETWORK_ID = "0x539";
 const DISPENSER_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
-// @ts-ignore
+// @ts-expect-error
 declare let window: any;
 
 type CurrentConnectionProps = {
