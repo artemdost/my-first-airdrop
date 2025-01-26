@@ -30,7 +30,7 @@ export default function Home() {
   const [currentConnection, setCurrentConnection] =
     useState<CurrentConnectionProps>();
   const [sucess, setSucess] = useState<boolean>(false);
-
+  console.log(typeof window.ethereum);
   const _resetState = () => {
     setNetworkError(undefined);
     setCurrentConnection({
