@@ -9,10 +9,10 @@ const config: HardhatUserConfig = {
       chainId: 1337,
       initialBaseFeePerGas: 0,
     },
-    arbitrum_sepolia: {
-      url: `${process.env.ALCHEMY_ARB_SEPOLIA_URL}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
-    },
+    // arbitrum_sepolia: {
+    //   url: `${process.env.ALCHEMY_ARB_SEPOLIA_URL}`,
+    //   accounts: [`0x${process.env.PRIVATE_KEY}`],
+    // },
   },
 };
 

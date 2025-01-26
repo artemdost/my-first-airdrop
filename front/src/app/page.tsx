@@ -27,6 +27,7 @@ export default function Home() {
   const [isClaimed, setIsClaimed] = useState<boolean>(false);
   const [currentConnection, setCurrentConnection] =
     useState<CurrentConnectionProps>();
+  const [sucess, setSucess] = useState<boolean>(false);
 
   const _resetState = () => {
     setNetworkError(undefined);
@@ -35,6 +36,9 @@ export default function Home() {
       dispencer: undefined,
       signer: undefined,
     });
+    setIsClaimed(false);
+    setSucess(false);
+    setTxBeingSent("");
   };
 
   const _checkNetwork = async (): Promise<boolean> => {
@@ -61,6 +65,11 @@ export default function Home() {
       signer,
       dispencer: Dispenser__factory.connect(DISPENSER_ADDRESS, signer),
     });
+
+    const dispencer = Dispenser__factory.connect(DISPENSER_ADDRESS, provider);
+
+    const claim = await dispencer.received(signer.address);
+    setIsClaimed(claim);
   };
   const _dismissNetworkError = () => {
     setNetworkError(undefined);
@@ -111,16 +120,13 @@ export default function Home() {
     const dispencer = currentConnection.dispencer;
     try {
       const mintTx = await dispencer.mint();
+      await mintTx.wait();
 
-      // setTxBeingSent(mintTx.hash);
-
-      // await mintTx.wait();
+      setTxBeingSent(mintTx.hash);
     } catch (err) {
       console.error(err);
 
       setTransactionError(err);
-    } finally {
-      setTxBeingSent(undefined);
     }
   };
 
@@ -133,7 +139,26 @@ export default function Home() {
           dismiss={_dismissNetworkError}
         />
       )}
-      {currentConnection?.signer && (
+
+      {isClaimed === true && (
+        <div className="bg-black w-full h-screen m-0 p-0 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-10">
+            <div
+              className={`text-white ${pixelify.className} text-4xl animate-fade-in`}
+            >
+              YOU ALREADY RECEIVED YOUR TOKENS
+            </div>
+            <button
+              className={`text-white ${pixelify.className} px-8 py-4 bg-black border-2 border-white animate-fade-in`}
+              onClick={_resetState}
+            >
+              DISCONNECT
+            </button>
+          </div>
+        </div>
+      )}
+
+      {currentConnection?.signer && isClaimed === false && (
         <div className="bg-black w-full h-screen m-0 p-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-10">
             <div
@@ -146,6 +171,24 @@ export default function Home() {
               onClick={_mintTokens}
             >
               CLAIM TOKENS
+            </button>
+          </div>
+        </div>
+      )}
+
+      {currentConnection?.signer && isClaimed === true && (
+        <div className="bg-black w-full h-screen m-0 p-0 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-10">
+            <div
+              className={`text-white ${pixelify.className} text-4xl animate-fade-in`}
+            >
+              SUCCESSFULLY CLAIMED. TX: {txBeingSent}
+            </div>
+            <button
+              className={`text-white ${pixelify.className} px-8 py-4 bg-black border-2 border-white animate-fade-in`}
+              onClick={_resetState}
+            >
+              DISCONNECT
             </button>
           </div>
         </div>
