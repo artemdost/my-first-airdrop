@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ethers } from "ethers";
 import type { BrowserProvider } from "ethers";
 import type { Dispenser } from "@/typechain";
@@ -15,7 +15,7 @@ const pixelify = Pixelify_Sans({
 const HARDHAT_NETWORK_ID = "0x539";
 const DISPENSER_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
-declare let window: any;
+declare let window: Window & { ethereum?: any };
 
 type CurrentConnectionProps = {
   provider: BrowserProvider | undefined;
@@ -26,7 +26,6 @@ type CurrentConnectionProps = {
 export default function Home() {
   const [networkError, setNetworkError] = useState<string>();
   const [txBeingSent, setTxBeingSent] = useState<string>();
-  const [transactionError, setTransactionError] = useState<any>();
   const [isClaimed, setIsClaimed] = useState<boolean>(false);
   const [currentConnection, setCurrentConnection] =
     useState<CurrentConnectionProps>();
@@ -106,7 +105,7 @@ export default function Home() {
       }
     );
 
-    window.ethereum.on("chainChanged", ([_networkId]: any) => {
+    window.ethereum.on("chainChanged", ([_networkId]: string[]) => {
       _resetState();
     });
   };
@@ -131,7 +130,6 @@ export default function Home() {
       setSucess(true); // Устанавливаем статус успешного выполнения
     } catch (err) {
       console.error(err);
-      setTransactionError(err); // Логируем ошибку и сохраняем её в состояние
     }
   };
   console.log("Sucess:", sucess);
