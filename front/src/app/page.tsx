@@ -105,7 +105,7 @@ export default function Home() {
       }
     );
 
-    window.ethereum.on("chainChanged", ([_networkId]: string[]) => {
+    window.ethereum.on("chainChanged", () => {
       _resetState();
     });
   };
