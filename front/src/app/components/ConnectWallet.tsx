@@ -2,7 +2,10 @@ import React from "react";
 import NetworkErrorMessage from "./NetworkErrorMessage";
 import { Pixelify_Sans } from "next/font/google";
 
-const pixelify = Pixelify_Sans({ weight: "400" });
+const pixelify = Pixelify_Sans({
+  subsets: ["latin"], // Укажите одно или несколько подмножеств
+  preload: true, // Предзагрузка шрифта
+});
 
 type ConnectWalletProps = {
   connectWallet: React.MouseEventHandler<HTMLButtonElement>;

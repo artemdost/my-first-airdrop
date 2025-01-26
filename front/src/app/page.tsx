@@ -7,7 +7,10 @@ import ConnectWallet from "./components/ConnectWallet";
 import { Dispenser__factory } from "@/typechain";
 import { Pixelify_Sans } from "next/font/google";
 
-const pixelify = Pixelify_Sans({ weight: "400" });
+const pixelify = Pixelify_Sans({
+  subsets: ["latin"], // Укажите одно или несколько подмножеств
+  preload: true, // Предзагрузка шрифта
+});
 
 const HARDHAT_NETWORK_ID = "0x539";
 const DISPENSER_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
@@ -118,18 +121,21 @@ export default function Home() {
     }
 
     const dispencer = currentConnection.dispencer;
-    try {
-      const mintTx = await dispencer.mint();
-      await mintTx.wait();
 
-      setTxBeingSent(mintTx.hash);
+    try {
+      // Отправляем транзакцию
+      const mintTx = await dispencer.mint();
+      setTxBeingSent(mintTx.hash); // Устанавливаем хеш сразу после отправки
+      await mintTx.wait(); // Ждём подтверждения транзакции
+
+      setSucess(true); // Устанавливаем статус успешного выполнения
     } catch (err) {
       console.error(err);
-
-      setTransactionError(err);
+      setTransactionError(err); // Логируем ошибку и сохраняем её в состояние
     }
   };
-
+  console.log("Sucess:", sucess);
+  console.log("TX:", txBeingSent);
   return (
     <main>
       {!currentConnection?.signer && (
@@ -140,7 +146,7 @@ export default function Home() {
         />
       )}
 
-      {isClaimed === true && (
+      {isClaimed === true && sucess === false && (
         <div className="bg-black w-full h-screen m-0 p-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-10">
             <div
@@ -158,7 +164,7 @@ export default function Home() {
         </div>
       )}
 
-      {currentConnection?.signer && isClaimed === false && (
+      {currentConnection?.signer && isClaimed === false && sucess === false && (
         <div className="bg-black w-full h-screen m-0 p-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-10">
             <div
@@ -176,13 +182,14 @@ export default function Home() {
         </div>
       )}
 
-      {currentConnection?.signer && isClaimed === true && (
+      {currentConnection?.signer && sucess === true && (
         <div className="bg-black w-full h-screen m-0 p-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-10">
             <div
-              className={`text-white ${pixelify.className} text-4xl animate-fade-in`}
+              className={`text-white ${pixelify.className} text-4xl animate-fade-in flex flex-col items-center`}
             >
-              SUCCESSFULLY CLAIMED. TX: {txBeingSent}
+              <div className="mb-2">SUCCESSFULLY CLAIMED AT TX:</div>
+              <div>{txBeingSent}</div>
             </div>
             <button
               className={`text-white ${pixelify.className} px-8 py-4 bg-black border-2 border-white animate-fade-in`}
