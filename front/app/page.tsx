@@ -12,8 +12,8 @@ const pixelify = Pixelify_Sans({
   preload: true, // Предзагрузка шрифта
 });
 
-const HARDHAT_NETWORK_ID = "0x539";
-const DISPENSER_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+const POLYGON_NETWORK_ID = "0x89";
+const DISPENSER_ADDRESS = "0x4a62ab81dcab0fa0d7449bd0a5f789694d9773b7";
 
 declare let window: any;
 
@@ -53,7 +53,7 @@ export default function Home() {
       method: "eth_chainId",
     });
 
-    if (chosenChainId === HARDHAT_NETWORK_ID) {
+    if (chosenChainId === POLYGON_NETWORK_ID) {
       return true;
     }
 
