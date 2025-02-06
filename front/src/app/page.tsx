@@ -30,7 +30,7 @@ export default function Home() {
   const [currentConnection, setCurrentConnection] =
     useState<CurrentConnectionProps>();
   const [sucess, setSucess] = useState<boolean>(false);
-  console.log(typeof window.ethereum);
+
   const _resetState = () => {
     setNetworkError(undefined);
     setCurrentConnection({
@@ -44,6 +44,11 @@ export default function Home() {
   };
 
   const _checkNetwork = async (): Promise<boolean> => {
+    if (typeof window === "undefined" || !window.ethereum) {
+      setNetworkError("Metamask is not available!");
+      return false;
+    }
+
     const chosenChainId = await window.ethereum.request({
       method: "eth_chainId",
     });
@@ -53,11 +58,12 @@ export default function Home() {
     }
 
     setNetworkError("Please connect to Polygon network!");
-
     return false;
   };
 
   const _initialize = async (selectedAccount: string) => {
+    if (typeof window === "undefined" || !window.ethereum) return;
+
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner(selectedAccount);
 
@@ -73,14 +79,14 @@ export default function Home() {
     const claim = await dispencer.received(signer.address);
     setIsClaimed(claim);
   };
+
   const _dismissNetworkError = () => {
     setNetworkError(undefined);
   };
 
   const _connectWallet = async () => {
-    if (window.ethereum === undefined) {
+    if (typeof window === "undefined" || !window.ethereum) {
       setNetworkError("Please install Metamask!");
-
       return;
     }
 
