@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 import type { BrowserProvider } from "ethers";
-import type { Dispenser } from "@/typechain";
+import type { Dispenser } from "../typechain";
 import ConnectWallet from "./components/ConnectWallet";
-import { Dispenser__factory } from "@/typechain";
+import { Dispenser__factory } from "../typechain";
 import { Pixelify_Sans } from "next/font/google";
 
 const pixelify = Pixelify_Sans({
